@@ -23,6 +23,7 @@ task :install => [:submodule_init, :submodules] do
   if want_to_install?('vim configuration (highly recommended)')
     install_files(Dir.glob('{vim,vimrc}'))
     Rake::Task["install_vim_plug"].execute
+    Rake::Task["install_ycm_lsp"].execute
   end
 
   Rake::Task["install_prezto"].execute
@@ -92,6 +93,21 @@ task :install_vim_plug do
   Plug::update_vim_pluggins
 end
 
+desc "Install YouCompleteMe LSP support"
+task :install_ycm_lsp do
+  puts "======================================================"
+  puts "Installing and updating Vim Plug."
+  puts "The installer will now proceed to install the relevant languages support."
+  puts "======================================================"
+
+  puts ""
+
+  run %{
+    cd $HOME/.yadr/ycm-core/lsp-examples
+    ./install.py --enable-dart --enable-ruby --enable-kotlin
+  }
+end
+
 task :default => 'install'
 
 private
@@ -153,7 +169,7 @@ def install_homebrew
   puts "Installing Homebrew packages...There may be some warnings."
   puts "======================================================"
   run %{brew install zsh ctags git hub tmux reattach-to-user-namespace the_silver_searcher ghi}
-  run %{brew install macvim}
+  run %{brew install neovim pyenv}
   puts
   puts
 end
